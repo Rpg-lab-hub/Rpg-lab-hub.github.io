@@ -1,48 +1,112 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  h1 {
-    color: #333;
-  }
-  
-  button {
-    padding: 10px 20px;
-    margin: 20px 0;
-    border: none;
-    border-radius: 6px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 10px;
-  }
-  
-  li {
-    background: white;
-    margin: 5px auto;
-    padding: 10px;
-    width: 90%;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    text-align: left;
-    word-wrap: break-word;
-  }
-  
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  text-align: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hidden {
+  display: none;
+}
+
+input, select, button, textarea {
+  padding: 6px;
+  margin: 5px;
+  font-size: 14px;
+}
+
+textarea {
+  width: 100%;
+  height: 60px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px auto;
+  max-width: 600px;
+  text-align: left;
+}
+
+li {
+  background: white;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+button.action-btn {
+  margin-left: 5px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+
+.player-card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.player-card h4 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.player-card button {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+}
+
+.player-card .edit-btn {
+  background-color: #4CAF50; /* Verde */
+}
+
+.player-card .delete-btn {
+  background-color: #f44336; /* Vermelho */
+}
+
+#campaign-list li {
+  padding: 8px;
+  cursor: pointer;
+  list-style: none;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+#campaign-list li:hover {
+  background-color: #e0e0e0;
+}
+
+#campaign-list li.selected {
+  background-color: #4CAF50; /* Verde indicando seleção */
+  color: white;
+  font-weight: bold;
+}
