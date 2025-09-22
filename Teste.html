@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="tudo">
+        <label id="contador">0</label>
+        <button id="meuBotao">Butão</button>
+        <button id="reset" onclick="reset()">Reset</button>
+    </div>
+
+    <script>
+        let valor = 0;
+        let intervalo;
+        let contador = document.getElementById("contador");
+        const botao = document.getElementById("meuBotao");
+
+        function reset() {
+            valor = 0;
+            contador.textContent = valor;
+        }
+
+        function executarTarefa() {
+            valor ++;
+            contador.textContent = valor;
+        }
+        botao.addEventListener('mousedown', function() {
+            intervalo = setInterval(executarTarefa, 1000);
+        });
+        botao.addEventListener('mouseup', function() {
+            clearInterval(intervalo);
+        });
+        botao.addEventListener('touchend', function() {
+            clearInterval(intervalo);
+        });
+    </script>
+    <style>
+        .tudo{
+            position: fixed;    /* Fixa a div na tela */
+            top: 0;
+            left: 0;
+            width: 100vw;       /* 100% da largura da janela */
+            height: 100vh;      /* 100% da altura da janela */
+            background-color: black; /* Exemplo de cor com transparência */
+            z-index: -1;
+        }
+
+        #contador{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            font-size: 58px;
+            background-color: black;
+            color: aliceblue;
+        }
+        #meuBotao{
+            position: absolute;
+            top: 50%;
+            left: 60%;
+            transform: translate(-50%, -60%);
+            background-color: aliceblue;
+            height: 50px;
+            width: 75px;
+            border-radius: 10px;
+        }
+        #meuBotao:hover{
+            background-color: red;
+            color: aliceblue;
+        }
+        #reset{
+            position: absolute;
+            top: 50%;
+            left: 40%;
+            transform: translate(-50%, -40%);
+            background-color: aliceblue;
+            height: 50px;
+            width: 75px;
+            border-radius: 10px;
+        }
+        #reset:hover{
+            background-color: red;
+            color: aliceblue;
+        }
+
+    </style>
+</body>
+</html>
