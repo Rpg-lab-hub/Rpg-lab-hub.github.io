@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tela do Mestre</title>
+<link rel="stylesheet" href="styleMaster.css">
+</head>
+<body>
+    <header>
+        <h1>Área do Mestre</h1>
+    </header>
+
+    <main>
+        <!-- Seção de criação de campanha -->
+        <section id="campaignSection">
+            <h2>Minhas Campanhas</h2>
+            <input type="text" id="newCampaignName" placeholder="Nome da nova campanha">
+            <button id="createCampaignBtn">Criar Campanha</button>
+            <ul id="campaignList"></ul>
+        </section>
+
+        <!-- Seção de jogadores da campanha -->
+        <section id="playerSection">
+            <h2>Jogadores da Campanha</h2>
+            <ul id="playerList"></ul>
+            <select id="addPlayerSelect"></select>
+            <button id="addPlayerBtn">Adicionar Jogador</button>
+        </section>
+
+        <!-- Seção de fichas -->
+        <section id="sheetSection">
+            <h2>Fichas dos Jogadores</h2>
+            
+            <ul id="sheetList"></ul>
+            <button id="createSheetBtn">Criar Ficha</button>
+        </section>
+    </main>
+
+    <script type="module" src="master.js"></script>
+</body>
+</html>

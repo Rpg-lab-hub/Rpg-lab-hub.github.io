@@ -1,80 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ordem Paranormal RPG</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login / Cadastro RPG</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-  <h1>Ordem Paranormal RPG</h1>
+    <div class="login-container">
+        <h1>Login / Cadastro</h1>
 
-  <!-- Login -->
-  <div id="login-section">
-    <input type="text" id="name" placeholder="Seu nome">
-    <select id="role">
-      <option value="player">Jogador</option>
-      <option value="mestre">Mestre</option>
-    </select>
-    <button id="login-btn">Entrar</button>
-  </div>
+        <input type="text" id="username" placeholder="Usuário">
+        <input type="password" id="password" placeholder="Senha">
 
-  <!-- Mestre -->
-  <div id="master-section" class="hidden">
-    <h2>Campanhas</h2>
-    <input type="text" id="campaign-name" placeholder="Nome da campanha">
-    <button id="create-campaign-btn">Criar Campanha</button>
+        <div class="buttons">
+            <button id="loginBtn">Login</button>
+            <button id="signupBtn">Cadastrar</button>
+        </div>
 
-    <h3>Selecione uma campanha</h3>
-    <ul id="campaign-list"></ul> <!-- Lista clicável de campanhas -->
-    <button id="delete-campaign-btn" class="hidden">Excluir Campanha</button>
-
-    <div id="add-player-section" class="hidden">
-      <h3>Adicionar jogador à campanha</h3>
-      <input type="text" id="new-player-name" placeholder="Nome do jogador">
-      <button id="add-player-btn">Adicionar Jogador</button>
-    </div>    
-
-    <h2>Jogadores da campanha selecionada</h2>
-    <div id="player-cards" class="cards-container"></div> <!-- Cards de jogadores -->
-
-    <div id="edit-sheet-section" class="hidden edit-section">
-      <h3>Editar Ficha</h3>
-      <label>Nome: <input type="text" id="sheet-edit-name"></label>
-      <label>Rank: <input type="number" id="sheet-edit-rank"></label>
-      <label>Saúde: <input type="number" id="sheet-edit-health"></label>
-      <label>Sanidade: <input type="number" id="sheet-edit-sanity"></label>
-      <label>Força: <input type="number" id="sheet-edit-strength"></label>
-      <label>Destreza: <input type="number" id="sheet-edit-dexterity"></label>
-      <label>Inteligência: <input type="number" id="sheet-edit-intelligence"></label>
-      <label>Habilidades (JSON): <textarea id="sheet-edit-skills"></textarea></label>
-      <label>Equipamentos (JSON): <textarea id="sheet-edit-equipment"></textarea></label>
-      <button id="save-sheet-btn">Salvar Alterações</button>
+        <p id="message"></p>
     </div>
-  </div>
-
-  <!-- Jogador -->
-  <div id="player-section" class="hidden">
-    <h2>Suas Fichas</h2>
-    <ul id="player-sheets"></ul>
-
-    <div id="edit-player-sheet-section" class="hidden">
-      <h3>Editar Ficha</h3>
-      <label>Nome: <input type="text" id="player-sheet-edit-name"></label>
-      <label>Rank: <input type="number" id="player-sheet-edit-rank"></label>
-      <label>Saúde: <input type="number" id="player-sheet-edit-health"></label>
-      <label>Sanidade: <input type="number" id="player-sheet-edit-sanity"></label>
-      <label>Força: <input type="number" id="player-sheet-edit-strength"></label>
-      <label>Destreza: <input type="number" id="player-sheet-edit-dexterity"></label>
-      <label>Inteligência: <input type="number" id="player-sheet-edit-intelligence"></label>
-      <label>Habilidades (JSON): <textarea id="player-sheet-edit-skills"></textarea></label>
-      <label>Equipamentos (JSON): <textarea id="player-sheet-edit-equipment"></textarea></label>
-      <button id="player-save-sheet-btn">Salvar Alterações</button>
-    </div>
-  </div>
-</div>
-
-<script type="module" src="script.js"></script>
 </body>
+<script type="module" src="login.js"></script>
 </html>
