@@ -10,7 +10,6 @@ const sheetList = document.getElementById("sheetList");
 const newCampaignName = document.getElementById("newCampaignName");
 const createCampaignBtn = document.getElementById("createCampaignBtn");
 const addPlayerBtn = document.getElementById("addPlayerBtn");
-const createSheetBtn = document.getElementById("createSheetBtn");
 
 let selectedCampaignId = null;
 let selectedPlayerId = null;
@@ -21,128 +20,160 @@ let selectedPlayerId = null;
 
 // Carregar campanhas do mestre
 async function loadCampaigns() {
-    const { data, error } = await supabase
-        .from("campaigns")
-        .select("*")
-        .eq("master_id", currentUserId);
+  const { data, error } = await supabase
+    .from("campaigns")
+    .select("*")
+    .eq("master_id", currentUserId);
 
-    if (error) return console.error(error);
+  if (error) return console.error(error);
 
-    campaignList.innerHTML = "";
-    data.forEach(camp => {
-        const li = document.createElement("li");
-        li.textContent = camp.name;
-        li.onclick = () => selectCampaign(camp.id);
-        campaignList.appendChild(li);
-    });
+  campaignList.innerHTML = "";
+  data.forEach((camp) => {
+    const li = document.createElement("li");
+    li.textContent = camp.name;
+    li.onclick = () => selectCampaign(camp.id);
+    campaignList.appendChild(li);
+  });
 }
 
 // Selecionar campanha
 async function selectCampaign(campaignId) {
-    selectedCampaignId = campaignId;
+  selectedCampaignId = campaignId;
 
-    // Obter nome da campanha primeiro
-const campaignName = await getCampaignName(campaignId);
+  const campaignName = await getCampaignName(campaignId);
+  const selectedLi = Array.from(campaignList.children).find(
+    (li) => li.textContent === campaignName
+  );
+  if (selectedLi) selectedLi.style.background = "#3b82f6";
 
-// Encontrar o elemento <li> correspondente
-const selectedLi = Array.from(campaignList.children).find(li => li.textContent === campaignName);
-if (selectedLi) selectedLi.style.background = "#3b82f6";
-
-
-    loadPlayersForCampaign();
+  loadPlayersForCampaign();
 }
 
 // Pegar nome da campanha
 async function getCampaignName(campaignId) {
-    const { data } = await supabase.from("campaigns").select("name").eq("id", campaignId).single();
-    return data?.name || "";
+  const { data } = await supabase
+    .from("campaigns")
+    .select("name")
+    .eq("id", campaignId)
+    .single();
+  return data?.name || "";
 }
 
 // Carregar jogadores e atualizar select de adição
 async function loadPlayersForCampaign() {
-    if (!selectedCampaignId) return;
+  if (!selectedCampaignId) return;
 
-    // Jogadores da campanha
-    const { data: playersInCampaign, error: playersError } = await supabase
+  // Jogadores da campanha
+  const { data: playersInCampaign, error: playersError } = await supabase
+    .from("campaign_players")
+    .select(`player_id, users!inner(username)`)
+    .eq("campaign_id", selectedCampaignId);
+
+  if (playersError) return console.error(playersError);
+
+  playerList.innerHTML = "";
+  const playersInCampaignIds = [];
+
+  playersInCampaign.forEach((p) => {
+    playersInCampaignIds.push(p.player_id);
+    const li = document.createElement("li");
+    li.textContent = p.users.username;
+
+    // Botão remover jogador
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remover";
+    removeBtn.onclick = async (e) => {
+      e.stopPropagation();
+      await supabase
         .from("campaign_players")
-        .select(`player_id, users!inner(username)`)
-        .eq("campaign_id", selectedCampaignId);
+        .delete()
+        .eq("campaign_id", selectedCampaignId)
+        .eq("player_id", p.player_id);
+      loadPlayersForCampaign();
+    };
 
-    if (playersError) return console.error(playersError);
+    // Ao clicar no jogador, carregar fichas dele
+    li.onclick = () => selectPlayer(p.player_id);
 
-    playerList.innerHTML = "";
-    const playersInCampaignIds = [];
+    li.appendChild(removeBtn);
+    playerList.appendChild(li);
+  });
 
-    playersInCampaign.forEach(p => {
-        playersInCampaignIds.push(p.player_id);
-        const li = document.createElement("li");
-        li.textContent = p.users.username;
+  // Lista de usuários para adicionar à campanha (exceto logado)
+  const { data: allUsers } = await supabase
+    .from("users")
+    .select("id, username")
+    .neq("id", currentUserId);
 
-        // Botão remover jogador
-        const removeBtn = document.createElement("button");
-        removeBtn.textContent = "Remover";
-        removeBtn.onclick = async (e) => {
-            e.stopPropagation();
-            await supabase.from("campaign_players")
-                .delete()
-                .eq("campaign_id", selectedCampaignId)
-                .eq("player_id", p.player_id);
-            loadPlayersForCampaign();
-        };
+  addPlayerSelect.innerHTML = `<option value="">Escolha um jogador</option>`;
+  allUsers.forEach((u) => {
+    if (!playersInCampaignIds.includes(u.id)) {
+      const option = document.createElement("option");
+      option.value = u.id;
+      option.textContent = u.username;
+      addPlayerSelect.appendChild(option);
+    }
+  });
+}
 
-        li.appendChild(removeBtn);
-        playerList.appendChild(li);
-    });
+// ==========================
+// Funções de fichas
+// ==========================
+async function selectPlayer(playerId) {
+  selectedPlayerId = playerId;
 
-    // Lista de usuários para adicionar à campanha (exceto logado)
-    const { data: allUsers } = await supabase
-        .from("users")
-        .select("id, username")
-        .neq("id", currentUserId);
+  const { data: sheets, error } = await supabase
+    .from("sheets")
+    .select("*")
+    .eq("campaign_id", selectedCampaignId)
+    .eq("player_id", playerId);
 
-    addPlayerSelect.innerHTML = `<option value="">Escolha um jogador</option>`;
-    allUsers.forEach(u => {
-        if (!playersInCampaignIds.includes(u.id)) {
-            const option = document.createElement("option");
-            option.value = u.id;
-            option.textContent = u.username;
-            addPlayerSelect.appendChild(option);
-        }
-    });
+  if (error) return console.error(error);
 
-    // Carregar fichas de todos os jogadores da campanha
-    const { data: sheets } = await supabase
-        .from("sheets")
-        .select("*")
-        .eq("campaign_id", selectedCampaignId);
+  sheetList.innerHTML = "";
+  sheets.forEach((s) => {
+    const li = document.createElement("li");
+    li.textContent = s.name;
 
-    sheetList.innerHTML = "";
-    sheets.forEach(s => {
-        const li = document.createElement("li");
-        li.textContent = `${s.name} (Player: ${s.player_id})`;
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Editar";
+    editBtn.onclick = async () => {
+      const newName = prompt("Novo nome da ficha:", s.name);
+      if (newName) {
+        await supabase.from("sheets").update({ name: newName }).eq("id", s.id);
+        selectPlayer(playerId);
+      }
+    };
 
-        // Botões de edição/exclusão da ficha
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "Editar";
-        editBtn.onclick = async () => {
-            const newName = prompt("Novo nome da ficha:", s.name);
-            if (newName) {
-                await supabase.from("sheets").update({ name: newName }).eq("id", s.id);
-                loadPlayersForCampaign();
-            }
-        };
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Excluir";
+    deleteBtn.onclick = async () => {
+      await supabase.from("sheets").delete().eq("id", s.id);
+      selectPlayer(playerId);
+    };
 
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "Excluir";
-        deleteBtn.onclick = async () => {
-            await supabase.from("sheets").delete().eq("id", s.id);
-            loadPlayersForCampaign();
-        };
+    li.appendChild(editBtn);
+    li.appendChild(deleteBtn);
+    sheetList.appendChild(li);
+  });
 
-        li.appendChild(editBtn);
-        li.appendChild(deleteBtn);
-        sheetList.appendChild(li);
-    });
+  // Botão para criar ficha
+  const newBtn = document.createElement("button");
+  newBtn.textContent = "Criar nova ficha";
+  newBtn.onclick = async () => {
+    const sheetName = prompt("Nome da nova ficha:");
+    if (!sheetName) return;
+    const { error } = await supabase.from("sheets").insert([
+      {
+        name: sheetName,
+        player_id: playerId,
+        campaign_id: selectedCampaignId,
+      },
+    ]);
+    if (error) return console.error(error);
+    selectPlayer(playerId);
+  };
+  sheetList.appendChild(newBtn);
 }
 
 // ==========================
@@ -151,47 +182,32 @@ async function loadPlayersForCampaign() {
 
 // Criar nova campanha
 createCampaignBtn.addEventListener("click", async () => {
-    const name = newCampaignName.value.trim();
-    if (!name) return alert("Informe o nome da campanha.");
+  const name = newCampaignName.value.trim();
+  if (!name) return alert("Informe o nome da campanha.");
 
-    const { error } = await supabase.from("campaigns").insert([{ name, master_id: currentUserId }]);
-    if (error) return console.error(error);
+  const { error } = await supabase
+    .from("campaigns")
+    .insert([{ name, master_id: currentUserId }]);
+  if (error) return console.error(error);
 
-    newCampaignName.value = "";
-    loadCampaigns();
+  newCampaignName.value = "";
+  loadCampaigns();
 });
 
 // Adicionar jogador
 addPlayerBtn.addEventListener("click", async () => {
-    const playerId = addPlayerSelect.value;
-    if (!playerId || !selectedCampaignId) return;
+  const playerId = addPlayerSelect.value;
+  if (!playerId || !selectedCampaignId) return;
 
-    const { error } = await supabase.from("campaign_players").insert([{
-        campaign_id: selectedCampaignId,
-        player_id: playerId
-    }]);
-    if (error) return console.error(error);
+  const { error } = await supabase.from("campaign_players").insert([
+    {
+      campaign_id: selectedCampaignId,
+      player_id: playerId,
+    },
+  ]);
+  if (error) return console.error(error);
 
-    loadPlayersForCampaign();
-});
-
-// Criar ficha de jogador
-createSheetBtn.addEventListener("click", async () => {
-    if (!selectedCampaignId) return alert("Selecione uma campanha primeiro.");
-    const playerId = prompt("Informe o ID do jogador para criar ficha:");
-    if (!playerId) return;
-
-    const sheetName = prompt("Nome da ficha:");
-    if (!sheetName) return;
-
-    const { error } = await supabase.from("sheets").insert([{
-        name: sheetName,
-        player_id: playerId,
-        campaign_id: selectedCampaignId
-    }]);
-    if (error) return console.error(error);
-
-    loadPlayersForCampaign();
+  loadPlayersForCampaign();
 });
 
 // ==========================

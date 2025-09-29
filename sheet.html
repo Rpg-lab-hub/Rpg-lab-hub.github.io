@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficha do Jogador</title>
+  <link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+  <h1 id="page-title">Ficha do Jogador</h1>
+
+  <form id="sheet-form">
+    <label>Nome: <input type="text" id="sheet-name"></label>
+    <label>Classe: <input type="text" id="sheet-class"></label>
+    <label>Nível: <input type="number" id="sheet-level"></label>
+    <label>HP: <input type="number" id="sheet-hp"></label>
+    <label>Descrição: <textarea id="sheet-description"></textarea></label>
+
+    <button type="button" id="save-sheet">Salvar</button>
+  </form>
+
+  <!-- Supabase via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Cliente do Supabase -->
+<script src="supabaseClient.js"></script>
+
+<!-- Script principal -->
+<script src="master.js"></script>
+</body>
+</html>
