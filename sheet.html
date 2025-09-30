@@ -2,30 +2,53 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ficha do Jogador</title>
+  <title>Gerenciamento RPG</title>
   <link rel="stylesheet" href="sheet.css">
+  <script type="module" src="sheet.js" defer></script>
+  <link rel="stylesheet" href="styleSheet.css">
 </head>
 <body>
-  <h1 id="page-title">Ficha do Jogador</h1>
+  <div class="sheet-container">
+    <h1>Ficha de Personagem</h1>
 
-  <form id="sheet-form">
-    <label>Nome: <input type="text" id="sheet-name"></label>
-    <label>Classe: <input type="text" id="sheet-class"></label>
-    <label>Nível: <input type="number" id="sheet-level"></label>
-    <label>HP: <input type="number" id="sheet-hp"></label>
-    <label>Descrição: <textarea id="sheet-description"></textarea></label>
+    <form id="sheetForm">
+      <!-- Nome -->
+      <label>Nome do Personagem:</label>
+      <input type="text" id="name" required>
 
-    <button type="button" id="save-sheet">Salvar</button>
-  </form>
+      <!-- Nível -->
+      <label>Nível:</label>
+      <input type="number" id="level" value="1" min="1">
 
-  <!-- Supabase via CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <!-- Atributos -->
+      <h2>Atributos</h2>
+      <div class="attributes">
+        <label>Força: <input type="number" id="forca" value="0"></label>
+        <label>Agilidade: <input type="number" id="agilidade" value="0"></label>
+        <label>Intelecto: <input type="number" id="intelecto" value="0"></label>
+        <label>Presença: <input type="number" id="presenca" value="0"></label>
+        <label>Vigor: <input type="number" id="vigor" value="0"></label>
+      </div>
 
-<!-- Cliente do Supabase -->
-<script src="supabaseClient.js"></script>
+      <!-- Perícias -->
+      <h2>Perícias</h2>
+      <div class="skills">
+        <label>Luta: <input type="number" id="luta" value="0"></label>
+        <label>Percepção: <input type="number" id="percepcao" value="0"></label>
+        <label>Investigação: <input type="number" id="investigacao" value="0"></label>
+        <label>Ocultismo: <input type="number" id="ocultismo" value="0"></label>
+      </div>
 
-<!-- Script principal -->
-<script src="master.js"></script>
+      <!-- Notas -->
+      <h2>Anotações</h2>
+      <textarea id="notes" rows="5" placeholder="História, equipamentos, observações..."></textarea>
+
+      <!-- Botões -->
+      <div class="actions">
+        <button type="submit">Salvar Ficha</button>
+        <button type="button" id="deleteBtn">Excluir Ficha</button>
+      </div>
+    </form>
+  </div>
 </body>
 </html>

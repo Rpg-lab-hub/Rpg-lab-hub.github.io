@@ -135,14 +135,11 @@ async function selectPlayer(playerId) {
     const li = document.createElement("li");
     li.textContent = s.name;
 
+    // Botão de editar -> redireciona para sheet.html
     const editBtn = document.createElement("button");
     editBtn.textContent = "Editar";
-    editBtn.onclick = async () => {
-      const newName = prompt("Novo nome da ficha:", s.name);
-      if (newName) {
-        await supabase.from("sheets").update({ name: newName }).eq("id", s.id);
-        selectPlayer(playerId);
-      }
+    editBtn.onclick = () => {
+      window.location.href = `sheet.html?sheetId=${s.id}&playerId=${playerId}&campaignId=${selectedCampaignId}`;
     };
 
     const deleteBtn = document.createElement("button");
@@ -163,22 +160,28 @@ async function selectPlayer(playerId) {
   newBtn.onclick = async () => {
     const sheetName = prompt("Nome da nova ficha:");
     if (!sheetName) return;
-    const { error } = await supabase.from("sheets").insert([
+    const { data, error } = await supabase.from("sheets").insert([
       {
         name: sheetName,
         player_id: playerId,
         campaign_id: selectedCampaignId,
       },
-    ]);
+    ]).select("id");
+
     if (error) return console.error(error);
-    selectPlayer(playerId);
+
+    // Redireciona direto para edição da nova ficha
+    if (data && data[0]) {
+      window.location.href = `sheet.html?sheetId=${data[0].id}&playerId=${playerId}&campaignId=${selectedCampaignId}`;
+    }
   };
   sheetList.appendChild(newBtn);
 }
 
+
 // ==========================
 // Event listeners
-// ==========================
+// ==========================   
 
 // Criar nova campanha
 createCampaignBtn.addEventListener("click", async () => {
